@@ -376,32 +376,39 @@
   function initQuoteForms() {
     var forms = document.querySelectorAll('form[data-qf]');
     Array.prototype.forEach.call(forms, function (f) {
-      function msg() {
+      function msg(withPath) {
         var lines = [f.getAttribute('data-subject') || ''];
         Array.prototype.forEach.call(f.elements, function (el) {
           if (!el.name || !el.value) { return; }
           lines.push((el.getAttribute('data-l') || el.name) + ': ' + el.value.trim());
         });
-        lines.push('(' + location.pathname + ')');
+        if (withPath) { lines.push('(' + location.pathname + ')'); }
         return lines.join('\n');
       }
       var pre = f.querySelector('.qf-pre pre');
-      function paint() { if (pre) { pre.textContent = msg(); } }
+      function paint() {
+        if (!pre) { return; }
+        var filled = Array.prototype.some.call(f.elements, function (el) { return el.name && el.value && el.tagName !== 'BUTTON'; });
+        pre.textContent = filled ? msg(false) : f.querySelector('.qf-pre').getAttribute('data-empty');
+        pre.classList.toggle('qf-empty', !filled);
+      }
       f.addEventListener('input', paint);
       f.addEventListener('change', paint);
       paint();
       f.addEventListener('submit', function (ev) {
         ev.preventDefault();
-        var name = f.elements.name, err = f.querySelector('.qf-err');
-        if (name && !name.value.trim()) {
-          if (err) { err.hidden = false; }
-          name.focus();
-          return;
-        }
-        if (err) { err.hidden = true; }
-        mailForm(f.getAttribute('data-mail'), { _subject: f.getAttribute('data-subject') + ' - ' + (name ? name.value.trim() : ''),
-          name: name ? name.value.trim() : '', message: msg(), page: location.href });
-        window.open('https://wa.me/' + f.getAttribute('data-wa') + '?text=' + encodeURIComponent(msg()), '_blank', 'noopener');
+        var name = f.elements.name, ct = f.elements.contact, btn = f.querySelector('button[type=submit]');
+        ['.qf-err', '.qf-err2', '.qf-ok', '.qf-fail'].forEach(function (q) { var x = f.querySelector(q); if (x) { x.hidden = true; } });
+        if (name && !name.value.trim()) { f.querySelector('.qf-err').hidden = false; name.focus(); return; }
+        if (ct && !ct.value.trim()) { f.querySelector('.qf-err2').hidden = false; ct.focus(); return; }
+        btn.disabled = true;
+        mailForm(f.getAttribute('data-mail'), { _subject: f.getAttribute('data-subject') + ' - ' + name.value.trim(),
+          name: name.value.trim(), reply_to: ct ? ct.value.trim() : '', message: msg(true), page: location.href })
+          .then(function (ok) {
+            f.querySelector(ok ? '.qf-ok' : '.qf-fail').hidden = false;
+            if (ok) { f.reset(); paint(); }
+            btn.disabled = false;
+          });
       });
     });
   }

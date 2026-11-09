@@ -837,3 +837,5 @@ html[lang="ar"] .hero-trust{letter-spacing:0;font-size:.82rem}
 .wk li{border:1px solid var(--border);border-radius:14px;padding:1.4rem;background:var(--bg-2)}
 .wk h3{font-size:1.1rem;margin:0 0 .5rem}.wk p{margin:0;color:var(--fg-2);line-height:1.6;font-size:.95rem}
 @media(min-width:760px){.pj-g .pj:first-child .pj-i{aspect-ratio:2.4/1}.pj-g .pj:first-child img{height:100%;object-fit:cover;object-position:50% 70%}.pj-g .pj:not(:first-child) .pj-i{aspect-ratio:3/2}.pj-g .pj:not(:first-child) img{height:100%;object-fit:cover}}
+.qf-btns{display:flex;gap:.7rem;flex-wrap:wrap}.qf-btns .btn{flex:1 1 220px;justify-content:center}.qf-ok{color:#1F8A4C;font-size:.9rem;margin:0 0 .8rem}
+.qf-pre{margin:1.4rem 0 0;font-size:.92rem}.qf-pre h3{font:600 .78rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 .6rem}.qf-pre pre{min-height:4.5rem}.qf-pre pre.qf-empty{color:var(--fg-2);font-style:italic}
