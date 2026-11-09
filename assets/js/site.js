@@ -363,6 +363,37 @@
 
   /* ------------------------------------------------------------- search */
   /* Hero slideshow: 3 s per slide; new slide enters from the left (EN) or the right (AR). */
+  function initQuoteForms() {
+    var forms = document.querySelectorAll('form[data-qf]');
+    Array.prototype.forEach.call(forms, function (f) {
+      function msg() {
+        var lines = [f.getAttribute('data-subject') || ''];
+        Array.prototype.forEach.call(f.elements, function (el) {
+          if (!el.name || !el.value) { return; }
+          lines.push((el.getAttribute('data-l') || el.name) + ': ' + el.value.trim());
+        });
+        lines.push('(' + location.pathname + ')');
+        return lines.join('\n');
+      }
+      var pre = f.querySelector('.qf-pre pre');
+      function paint() { if (pre) { pre.textContent = msg(); } }
+      f.addEventListener('input', paint);
+      f.addEventListener('change', paint);
+      paint();
+      f.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var name = f.elements.name, err = f.querySelector('.qf-err');
+        if (name && !name.value.trim()) {
+          if (err) { err.hidden = false; }
+          name.focus();
+          return;
+        }
+        if (err) { err.hidden = true; }
+        window.open('https://wa.me/' + f.getAttribute('data-wa') + '?text=' + encodeURIComponent(msg()), '_blank', 'noopener');
+      });
+    });
+  }
+
   function initHeroSlides() {
     var box = $('.hero-slides');
     if (!box) return;
@@ -526,6 +557,7 @@
     initFilters();
     initCalc();
     initHeroSlides();
+    initQuoteForms();
     initSearch();
 
     var hdr = $('.hdr');
