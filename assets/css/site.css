@@ -274,7 +274,7 @@ html[lang="ar"] .hero-tag b{font-family:var(--ar-serif)}
 .trust-i span{font-size:.81rem;color:var(--fg-2);line-height:1.45}
 
 /* ---------------------------------------------------------------- sections */
-.sec{padding-block:clamp(3rem,6vw,5.5rem)}
+.sec{padding-block:clamp(2.6rem,5vw,4.4rem)}
 .sec-sm{padding-block:clamp(2rem,4vw,3.4rem)}
 .sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;
   margin-bottom:clamp(1.6rem,3vw,2.6rem);flex-wrap:wrap}
@@ -468,7 +468,7 @@ html[lang="ar"] .acc-b{font-family:var(--ar-sans)}
 .spec tr:last-child th,.spec tr:last-child td{border-bottom:0}
 
 /* ---------------------------------------------------------------- article */
-.art{padding-block:clamp(1.4rem,3vw,2.4rem) clamp(3rem,6vw,5rem)}
+.art{padding-block:clamp(1.4rem,3vw,2.4rem) clamp(1.6rem,3vw,2.6rem)}
 .art-h{max-width:760px;margin-inline:auto;text-align:center;margin-bottom:clamp(2rem,4vw,3rem)}
 .art-h h1{margin-bottom:1rem}
 .art-m{font-size:.82rem;color:var(--fg-2);display:flex;gap:.8rem;justify-content:center;
