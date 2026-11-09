@@ -363,6 +363,16 @@
 
   /* ------------------------------------------------------------- search */
   /* Hero slideshow: 3 s per slide; new slide enters from the left (EN) or the right (AR). */
+  // email relay: FormSubmit forwards the JSON to the address (needs a one-time activation click from that inbox)
+  function mailForm(to, fields) {
+    if (!to) { return Promise.resolve(false); }
+    fields._captcha = 'false';
+    return fetch('https://formsubmit.co/ajax/' + to, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(fields)
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  }
+
   function initQuoteForms() {
     var forms = document.querySelectorAll('form[data-qf]');
     Array.prototype.forEach.call(forms, function (f) {
@@ -389,6 +399,8 @@
           return;
         }
         if (err) { err.hidden = true; }
+        mailForm(f.getAttribute('data-mail'), { _subject: f.getAttribute('data-subject') + ' - ' + (name ? name.value.trim() : ''),
+          name: name ? name.value.trim() : '', message: msg(), page: location.href });
         window.open('https://wa.me/' + f.getAttribute('data-wa') + '?text=' + encodeURIComponent(msg()), '_blank', 'noopener');
       });
     });
@@ -525,9 +537,10 @@
     var body = $$('input', f).map(function (i) {
       return encodeURIComponent(i.name) + '=' + encodeURIComponent(i.value);
     }).join('&');
-    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
-      .then(function (r) {
-        if (!r.ok) { throw new Error('form'); }
+    var em = f.elements.email ? f.elements.email.value.trim() : '';
+    mailForm(f.getAttribute('data-mail'), { _subject: 'Newsletter signup', email: em, language: LANG, page: location.href })
+      .then(function (ok) {
+        if (!ok) { throw new Error('form'); }
         f.reset(); btn.textContent = '\u2713';
         toast(LANG === 'ar' ? 'شكرًا، تم الاشتراك' : 'Thank you, you are subscribed');
       })
